@@ -12,10 +12,11 @@ namespace DeviceManagement
 
         public void ChangeDeviceState( string physicalName, bool disable )
         {
-            SafeDeviceInformationSetHandle info = null;
             var devData = new SP_DEVINFO_DATA();
 
-            if ( GetDevice( physicalName, ref info, ref devData ) )
+            using var info = GetDevice(physicalName, ref devData);
+
+            if ( info != null )
             {
                 SP_CLASSINSTALL_HEADER header = new SP_CLASSINSTALL_HEADER();
                 header.cbSize = (UInt32)Marshal.SizeOf(header);
@@ -42,11 +43,11 @@ namespace DeviceManagement
 
         public Device? GetDevice( string physicalName )
         {
-            SafeDeviceInformationSetHandle info = null;
             var devData = new SP_DEVINFO_DATA();
             Device? device = null;
 
-            if ( GetDevice( physicalName, ref info, ref devData ) )
+            using var info = GetDevice( physicalName, ref devData );
+            if ( info != null )
             {
                 device = CreateDevice( info, devData );
             }
@@ -108,15 +109,14 @@ namespace DeviceManagement
         /// <param name="info"></param>
         /// <param name="devData"></param>
         /// <returns></returns>
-        private bool GetDevice(
+        private SafeDeviceInformationSetHandle? GetDevice(
             string physicalName,
-            ref SafeDeviceInformationSetHandle info,
             ref SP_DEVINFO_DATA devData
         )
         {
             var emptyGuid = Guid.Empty;
 
-            info = SetupDiGetClassDevsW( ref emptyGuid, IntPtr.Zero, IntPtr.Zero, DIGCF.ALLCLASSES | DIGCF.PRESENT );
+            using var info = SetupDiGetClassDevsW( ref emptyGuid, IntPtr.Zero, IntPtr.Zero, DIGCF.ALLCLASSES | DIGCF.PRESENT );
             CheckWin32Error( "SetupDiGetClassDevs" );
 
             devData = new SP_DEVINFO_DATA();
@@ -132,10 +132,10 @@ namespace DeviceManagement
                 var physicalObjectName =
                     PropertyForDevice( info, devData, ( uint )SPDRP.PHYSICAL_DEVICE_OBJECT_NAME ) ?? "";
 
-                if ( physicalName == physicalObjectName ) return true;
+                if ( physicalName == physicalObjectName ) return info;
             }
 
-            return false;
+            return null;
         }
     }
 }
