@@ -9,7 +9,7 @@ namespace DeviceManagement.imports;
 public static class WinApi
 {
     private const string SETUPAPI = "setupapi.dll";
-    private const string ADVAPI = "advapi32.dll";
+    private const string CFGMGR = "advapi32.dll";
     private const int ERROR_INVALID_DATA = 13;
     private const int ERROR_INSUFFICIENT_BUFFER = 122;
 
@@ -46,7 +46,7 @@ public static class WinApi
     );
 
     [DllImport( SETUPAPI, SetLastError = true )]
-    static extern bool SetupDiGetDeviceRegistryPropertyW(
+    public static extern bool SetupDiGetDeviceRegistryPropertyW(
         SafeDeviceInformationSetHandle DeviceInfoSet,
         [In] ref SP_DEVINFO_DATA DeviceInfoData,
         uint Property,
@@ -54,6 +54,12 @@ public static class WinApi
         IntPtr PropertyBuffer,
         uint PropertyBufferSize,
         [In, Out] ref uint RequiredSize
+    );
+
+    [DllImport( SETUPAPI, SetLastError = true )]
+    public static extern bool SetupDiRestartDevices(
+        SafeDeviceInformationSetHandle DeviceInfoSet,
+        [In, Out] ref SP_DEVINFO_DATA DeviceInfoData
     );
 
     public static void IsWin32CallSuccess( bool success )

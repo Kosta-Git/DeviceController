@@ -10,16 +10,22 @@ namespace DeviceManagement
     {
         const uint ERROR_NO_MORE_ITEMS = 259;
 
+        public bool RestartDevice( string physicalName )
+        {
+            var devData = new SP_DEVINFO_DATA();
+            using var info = GetDevice( physicalName, ref devData );
+            return SetupDiRestartDevices( info, ref devData );
+        }
+
         public void ChangeDeviceState( string physicalName, bool disable )
         {
             var devData = new SP_DEVINFO_DATA();
-
-            using var info = GetDevice(physicalName, ref devData);
+            using var info = GetDevice( physicalName, ref devData );
 
             if ( info != null )
             {
                 SP_CLASSINSTALL_HEADER header = new SP_CLASSINSTALL_HEADER();
-                header.cbSize = (UInt32)Marshal.SizeOf(header);
+                header.cbSize = ( UInt32 )Marshal.SizeOf( header );
                 header.InstallFunction = DIF.PROPERTYCHANGE;
 
                 SP_PROPCHANGE_PARAMS propchangeparams = new SP_PROPCHANGE_PARAMS();
@@ -32,14 +38,14 @@ namespace DeviceManagement
                     info,
                     ref devData,
                     ref propchangeparams,
-                    (UInt32)Marshal.SizeOf(propchangeparams)
+                    ( UInt32 )Marshal.SizeOf( propchangeparams )
                 );
-                CheckWin32Error("SetupDiSetClassInstallParams");
+                CheckWin32Error( "SetupDiSetClassInstallParams" );
 
-                var didChange = SetupDiChangeState(info, ref devData);
-                CheckWin32Error("SetupDiChangeState");
+                SetupDiChangeState( info, ref devData );
+                CheckWin32Error( "SetupDiChangeState" );
             }
-        } 
+        }
 
         public Device? GetDevice( string physicalName )
         {
@@ -78,8 +84,7 @@ namespace DeviceManagement
                 if ( Marshal.GetLastWin32Error() == ERROR_NO_MORE_ITEMS )
                     break;
                 CheckWin32Error( "SetupDiEnumDeviceInfo" );
-
-                devices.Add( CreateDevice( infoHandle, devData ) );
+                devices.Add(CreateDevice(infoHandle, devData));
             }
 
             return devices;
@@ -116,7 +121,8 @@ namespace DeviceManagement
         {
             var emptyGuid = Guid.Empty;
 
-            using var info = SetupDiGetClassDevsW( ref emptyGuid, IntPtr.Zero, IntPtr.Zero, DIGCF.ALLCLASSES | DIGCF.PRESENT );
+            var info = SetupDiGetClassDevsW( ref emptyGuid, IntPtr.Zero, IntPtr.Zero,
+                                             DIGCF.ALLCLASSES | DIGCF.PRESENT );
             CheckWin32Error( "SetupDiGetClassDevs" );
 
             devData = new SP_DEVINFO_DATA();

@@ -5,7 +5,9 @@ VisualStudioVersion = 17.3.32811.315
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeviceManagement", "DeviceManagement\DeviceManagement.csproj", "{BA0ED365-C53B-4CC4-8D9F-B4FE0A5C289C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CLI", "CLI\CLI.csproj", "{C3E392D0-11B7-4053-A121-A368F08954EF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CLI", "CLI\CLI.csproj", "{C3E392D0-11B7-4053-A121-A368F08954EF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GUI", "GUI\GUI.csproj", "{4989842C-8D58-481E-860B-6B43C04469D2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{C3E392D0-11B7-4053-A121-A368F08954EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C3E392D0-11B7-4053-A121-A368F08954EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C3E392D0-11B7-4053-A121-A368F08954EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4989842C-8D58-481E-860B-6B43C04469D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4989842C-8D58-481E-860B-6B43C04469D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4989842C-8D58-481E-860B-6B43C04469D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4989842C-8D58-481E-860B-6B43C04469D2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
